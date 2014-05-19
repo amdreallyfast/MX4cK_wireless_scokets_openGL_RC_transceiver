@@ -8,8 +8,6 @@ using std::endl;
 #include <WS2tcpip.h>
 #pragma comment (lib, "Ws2_32.lib")
 
-static const unsigned int DEFAULT_BUFF_LEN = 512;
-
 my_scoket::my_scoket() 
    : m_init_failed(false), 
    m_connection_socket(INVALID_SOCKET),
@@ -170,30 +168,25 @@ int my_scoket::receive_data(char *rx_buff, int rx_buff_len)
 
    if (0 == this_ret_val)
    {
-      // get the incoming data until it stops coming
+      // get the incoming data
       // Note: Hopefully, the data won't get chopped off midstream because of the
       // speed difference between my computer's cpu and the microcontroller's processor
-      do
+      rx_byte_count = recv(m_connection_socket, rx_buff, rx_buff_len, 0);
+      if (rx_byte_count > 0)
       {
-         rx_byte_count = recv(m_connection_socket, rx_buff, rx_buff_len, 0);
-         if (rx_byte_count > 0)
-         {
-            rx_buff[rx_byte_count] = 0;
-            cout << "bytes received: '" << rx_byte_count << "': '" << rx_buff << "'" << endl;
-         }
-         else if (0 == rx_byte_count)
-         {
-            cout << "connection closed" << endl;
-            break;
-         }
-         else
-         {
-            // "received byte count" < 0
-            cout << "receive failed: '" << WSAGetLastError() << "'" << endl;
-            this_ret_val = -4;
-            break;
-         }
-      } while (rx_byte_count > 0);
+         rx_buff[rx_byte_count] = 0;
+         cout << "bytes received: '" << rx_byte_count << "'" << endl;
+      }
+      else if (0 == rx_byte_count)
+      {
+         cout << "connection closed" << endl;
+      }
+      else
+      {
+         // "received byte count" < 0
+         cout << "receive failed: '" << WSAGetLastError() << "'" << endl;
+         this_ret_val = -4;
+      }
    }
 
    return this_ret_val;
