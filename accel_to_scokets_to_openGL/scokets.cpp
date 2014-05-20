@@ -24,7 +24,9 @@ my_scoket::~my_scoket()
    result_val = shutdown(m_connection_socket, SD_BOTH);
    if (SOCKET_ERROR == result_val)
    {
+#ifdef DEBUG
       cout << "shutdown failed: '" << WSAGetLastError() << "'" << endl;
+#endif
    }
 
    // close the socketed (if it was opened)
@@ -57,7 +59,9 @@ int my_scoket::init(char *c_str_host_addr, char *c_str_port)
    result_val = WSAStartup(MAKEWORD(2, 2), &wsa_data);
    if (result_val != 0)
    {
+#ifdef DEBUG
       cout << "WSAStartup(...) failed, returning '" << this_ret_val << "'" << endl;
+#endif
       this_ret_val = -3;
    }
 
@@ -79,7 +83,9 @@ int my_scoket::init(char *c_str_host_addr, char *c_str_port)
 
       if (result_val != 0)
       {
+#ifdef DEBUG
          cout << "getaddrinfo(...) failed, returning '" << result_val << "'" << endl;
+#endif
          this_ret_val = -4;
       }
    }
@@ -95,7 +101,9 @@ int my_scoket::init(char *c_str_host_addr, char *c_str_port)
 
       if (INVALID_SOCKET == m_connection_socket)
       {
+#ifdef DEBUG
          cout << "error at socket(...): '" << WSAGetLastError() << "'" << endl;
+#endif
          this_ret_val = -5;
       }
    }
@@ -108,8 +116,10 @@ int my_scoket::init(char *c_str_host_addr, char *c_str_port)
       {
          // we should consider trying the next address in the list rather than giving up entirely
 
+#ifdef DEBUG
          cout << "unable to connect to server" << endl;
          cout << "error at connect(...): '" << WSAGetLastError() << "'" << endl;
+#endif
          this_ret_val = -6;
       }
    }
@@ -138,16 +148,22 @@ int my_scoket::send_data(char *tx_buff, int tx_bytes_to_send)
       // connection did not fail, so send the buffer
 
       // cross your fingers and hope that it is a null-terminated string
+#ifdef DEBUG
       cout << "sending '" << tx_buff << "', length '" << tx_bytes_to_send << "'" << endl;
+#endif
       result_val = send(m_connection_socket, tx_buff, tx_bytes_to_send, 0);
       if (SOCKET_ERROR == result_val)
       {
+#ifdef DEBUG
          cout << "send failed: '" << WSAGetLastError() << "'" << endl;
+#endif
          this_ret_val = -5;
       }
       else
       {
+#ifdef DEBUG
          cout << "bytes send: '" << result_val << "'" << endl;
+#endif
       }
    }
 
@@ -175,16 +191,22 @@ int my_scoket::receive_data(char *rx_buff, int rx_buff_len)
       if (rx_byte_count > 0)
       {
          rx_buff[rx_byte_count] = 0;
+#ifdef DEBUG
          cout << "bytes received: '" << rx_byte_count << "'" << endl;
+#endif
       }
       else if (0 == rx_byte_count)
       {
+#ifdef DEBUG
          cout << "connection closed" << endl;
+#endif
       }
       else
       {
          // "received byte count" < 0
+#ifdef DEBUG
          cout << "receive failed: '" << WSAGetLastError() << "'" << endl;
+#endif
          this_ret_val = -4;
       }
    }

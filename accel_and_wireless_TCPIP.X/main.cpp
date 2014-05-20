@@ -77,7 +77,7 @@ extern "C" void __ISR(_TIMER_1_VECTOR, IPL7AUTO) Timer1Handler(void)
       if (g_accel_init_good)
       {
          // read the accelerometer and send it out to the PC
-         //add_function_to_queue((void*)read_accel_and_send);
+         add_function_to_queue((void*)read_accel_and_send);
       }
    }
 
@@ -96,7 +96,6 @@ void read_accel_and_send(void)
    if (g_accel_init_good)
    {
       char cls_message[20];
-      unsigned char tx_buffer[MESSAGE_BUFFER_SIZE_BYTES];
       ACCEL_DATA accel_data;
 
       my_i2c_handler& i2c_ref = my_i2c_handler::get_instance();
@@ -107,14 +106,16 @@ void read_accel_and_send(void)
       snprintf(cls_message, CLS_LINE_SIZE, "z:%.2lf", accel_data.Z);
       i2c_ref.CLS_write_to_line(I2C2, cls_message, 2);
 
-      // now spit the message back out, formatted to appear visually
-      // different from the sent message
-      // Note: Cross your fingers and hope that the incoming message wasn't
-      // so big that the new format will be truncated in the transmit
-      // buffer.
-      memset(tx_buffer, 0, MESSAGE_BUFFER_SIZE_BYTES);
-      snprintf((char*)tx_buffer, MESSAGE_BUFFER_SIZE_BYTES, "X:%.2f, Y:%.2f, Z:%.2f", accel_data.X, accel_data.Y, accel_data.Z);
-      TCPIP_basic_send(SERVER_PORT, tx_buffer, strlen((char*)tx_buffer));
+      // only bother to send the data if there is a connection
+      if (1 == TCPIP_is_there_a_connection_on_port(SERVER_PORT))
+      {
+         unsigned char tx_buffer[MESSAGE_BUFFER_SIZE_BYTES];
+         
+         // send the accelerometer data to the PC
+         memset(tx_buffer, 0, MESSAGE_BUFFER_SIZE_BYTES);
+         snprintf((char*)tx_buffer, MESSAGE_BUFFER_SIZE_BYTES, "X:%.2f, Y:%.2f, Z:%.2f", accel_data.X, accel_data.Y, accel_data.Z);
+         TCPIP_basic_send(SERVER_PORT, tx_buffer, strlen((char*)tx_buffer));
+      }
    }
 }
 
@@ -277,40 +278,9 @@ int main(void)
       byte_count = TCPIP_bytes_in_RX_FIFO(SERVER_PORT);
       if (byte_count > 0)
       {
-         // missige for you, sire
-         snprintf(cls_message, CLS_LINE_SIZE, "RX bytes: %d", byte_count);
-         //i2c_ref.CLS_write_to_line(I2C2, cls_message, 1);
-
-         // clear out the message buffer, get the missige, then display it on
-         // the CLS pmod, line 2 (because I want "missige sire:" to display on
-         // the top line)
-         memset(rx_buffer, 0, MESSAGE_BUFFER_SIZE_BYTES);
+         // get the data out of the RX FIFO so it does clog it up, then ignore
+         // the data
          byte_count = TCPIP_basic_receive(SERVER_PORT, rx_buffer, MESSAGE_BUFFER_SIZE_BYTES);
-         if (byte_count > CLS_LINE_SIZE)
-         {
-            // ??do something if it is too long to print on a single CLS line? no? do we care??
-         }
-         else if (byte_count == MESSAGE_BUFFER_SIZE_BYTES)
-         {
-            // do something?
-         }
-
-         // forcefully null terminate the receive buffer to make sure that the
-         // formated string (%s) procedes without incident
-         // Note: If you are using Tera Term, chop off the last two bytes,
-         // which are the return carriage and new line characters that Tera
-         // Term sends when the return key is pressed.
-         // Note: If not using Tera Term, do not chop off the last two bytes
-         // unless you know that the sending program appends unwanted
-         // characters or other bytes to the end.
-         //rx_buffer[byte_count - 2] = 0;
-         rx_buffer[byte_count] = 0;
-         snprintf(cls_message, CLS_LINE_SIZE, "%s", rx_buffer);
-         //i2c_ref.CLS_write_to_line(I2C2, cls_message, 2);
-
-
-         // send out the accelerometer data
-         add_function_to_queue((void*)read_accel_and_send);
       }
 
       // delay for a little bit so that the LED doesn't blink too fast to see
