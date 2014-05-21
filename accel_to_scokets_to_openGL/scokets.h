@@ -1,4 +1,7 @@
-#pragma once
+#ifndef SCOKETS_H
+#define SCOKETS_H
+
+//#pragma once
 
 #include <string>
 using std::string;
@@ -21,3 +24,5 @@ private:
    struct addrinfo *m_host_info_list_head;
    struct addrinfo *m_host_info_ptr;
 };
+
+#endif SCOKETS_H
