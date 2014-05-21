@@ -68,7 +68,7 @@ extern "C" void __ISR(_TIMER_1_VECTOR, IPL7AUTO) Timer1Handler(void)
       if (g_TCPIP_service_can_start)
       {
          // service the TCPIP stack
-         add_function_to_queue((void *)TCPIP_keep_stack_alive);
+         add_function_to_queue(TCPIP_keep_stack_alive);
       }
    }
 
@@ -77,7 +77,7 @@ extern "C" void __ISR(_TIMER_1_VECTOR, IPL7AUTO) Timer1Handler(void)
       if (g_accel_init_good)
       {
          // read the accelerometer and send it out to the PC
-         add_function_to_queue((void*)read_accel_and_send);
+         add_function_to_queue(read_accel_and_send);
       }
    }
 
