@@ -5,7 +5,7 @@
 class shape_generator
 {
 public:
-   int make_cube(my_shape *shape_data_to_fill_ptr);
+   static int make_cube(my_shape *shape_ptr_to_assign_to);
 
 private:
    shape_generator();

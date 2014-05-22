@@ -28,6 +28,7 @@ using std::endl;
 static const unsigned int BUFF_SIZE = 512;
 static const unsigned int MAX_ACCEL_READS = 12;
 
+// for vector typing
 #include "glm\glm\glm.hpp"
 
 int main(int argc, char **argv)
@@ -55,12 +56,17 @@ int main(int argc, char **argv)
 
    int app_return_val = 0;
 
-   QApplication app(argc, argv);
+   glm::vec3 V = glm::vec3(1.0f, 2.0f, 3.0f);
+   V = glm::vec3(3.0f, 2.0f, 1.0f);
 
-   my_GL_window window_for_doing_gl_stuff;
-   window_for_doing_gl_stuff.show();
+   cout << V.x << ", " << V.y << ", " << V.z << endl;
 
-   app_return_val = app.exec();
+   //QApplication app(argc, argv);
+
+   //my_GL_window window_for_doing_gl_stuff;
+   //window_for_doing_gl_stuff.show();
+
+   //app_return_val = app.exec();
 
    return app_return_val;
 }

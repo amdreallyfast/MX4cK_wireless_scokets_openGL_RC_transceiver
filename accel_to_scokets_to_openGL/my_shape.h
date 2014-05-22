@@ -6,24 +6,19 @@
 // for typedefs (GLuint, etc.)
 #include <glew-1.10.0\include\GL\glew.h>
 
-// use a struct, not a class, to communicate that I want everything to default to
-// being public
-// Note: This is an organizational data structur for a bunch of data and therefore
-// does not need anything to be private.  Use "struct" instead of "class" to 
-// clarify intent.
-struct my_shape
+class my_shape
 {
 public:
-   my_shape();
+   my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr, GLuint num_indices);
    ~my_shape();
 
-   // these inquisitive functions will be used for glBufferData(...)
-   // Note: Use a GLsizeiptr because that is what glBufferData(...) wants for the
-   // size of the buffer.
-   GLsizeiptr vertex_buffer_size() const;
-   GLsizeiptr index_buffer_size() const;
+   // send in various data necessary for this object to compute how it shall draw itself
+   int draw_thineself(glm::mat4 *projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr);
 
-   int draw_thineself(void(*gl_context_drawing_function_ptr)(void));
+private:
+   // make some default constructors explicitly private to prevent improper initialization
+   my_shape();
+   my_shape(const my_shape&);
 
    my_vertex *m_vertices_arr;
    GLuint m_num_vertices;
@@ -32,4 +27,8 @@ public:
 
    GLuint m_vertex_buffer_ID;
    GLuint m_index_buffer_ID;
+   GLuint m_transformation_matrix_buffer_ID;
+
+   glm::mat4 m_translation_matrix;
+   glm::mat4 m_rotation_matrix;
 };

@@ -16,14 +16,13 @@ using glm::mat4;
 using glm::translate;
 using glm::perspective;
 
-int shape_generator::make_cube(my_shape *shape_data_to_fill_ptr)
+int shape_generator::make_cube(my_shape *shape_ptr_to_assign_to)
 {
    unsigned int array_size_bytes = 0;
    unsigned int array_entry_count = 0;
    int this_ret_val = 0;
 
-   // check for input shenanigans
-   if (0 == shape_data_to_fill_ptr)
+   if (0 == shape_ptr_to_assign_to)
    {
       this_ret_val = -1;
    }
@@ -79,19 +78,14 @@ int shape_generator::make_cube(my_shape *shape_data_to_fill_ptr)
          4, 6, 7, 4, 5, 7,    // left face
       };
 
-      // fill the shape data with the default vertex data
-      array_size_bytes = sizeof(verts);
-      array_entry_count = array_size_bytes / sizeof(*verts);
-      shape_data_to_fill_ptr->m_num_vertices = array_entry_count;
-      shape_data_to_fill_ptr->m_vertices_arr = new my_vertex[array_entry_count];
-      memcpy(shape_data_to_fill_ptr->m_vertices_arr, verts, array_size_bytes);
 
-      // fill the shape data with the default index data
-      array_size_bytes = sizeof(indices);
-      array_entry_count = array_size_bytes / sizeof(*indices);
-      shape_data_to_fill_ptr->m_num_indices = array_entry_count;
-      shape_data_to_fill_ptr->m_indices_arr = new GLushort[array_entry_count];
-      memcpy(shape_data_to_fill_ptr->m_indices_arr, indices, array_size_bytes);
+      // now make a new shape and return it via the supplied pointer
+      shape_ptr_to_assign_to = new my_shape(
+         verts,
+         sizeof(verts) / sizeof(my_vertex),
+         indices,
+         sizeof(indices) / sizeof(GLushort)
+         );
    }
 
    return this_ret_val;
