@@ -33,7 +33,6 @@ static const unsigned int MAX_ACCEL_READS = 12;
 
 int main(int argc, char **argv)
 {
-   cout << sizeof(glm::vec4) << endl;
    //int num_accelerometer_reads = 0;
    //char tx_buffer[BUFF_SIZE];
    //char rx_buffer[BUFF_SIZE];
@@ -58,14 +57,13 @@ int main(int argc, char **argv)
 
    QApplication app(argc, argv);
 
-   //glm::mat4 translate_matrix;
+   //glm::mat4 translate_matrix = glm::mat4();
    //glm::translate(translate_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
    ////translate_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f));
    //translate_matrix = glm::translate(translate_matrix, glm::vec3(5.0f, 17.0f, -9.0f));
 
    my_GL_window window_for_doing_gl_stuff;
    window_for_doing_gl_stuff.show();
-   //window_for_doing_gl_stuff.render_frame();
 
    app_return_val = app.exec();
 

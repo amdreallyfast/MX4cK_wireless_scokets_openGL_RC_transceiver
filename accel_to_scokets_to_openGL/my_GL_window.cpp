@@ -17,6 +17,10 @@ using std::vector;
 // for matrix transformation stuff
 #include <glm\glm\gtc\matrix_transform.hpp>
 
+// for mouse stuff
+#include <QtGui/qmouseevent>
+#include <QtGui/qkeyevent>
+
 
 my_GL_window::~my_GL_window()
 {
@@ -25,6 +29,11 @@ my_GL_window::~my_GL_window()
    while (m_shape_ptrs_vector_it != m_shape_ptrs_vector.end())
    {
       delete (*m_shape_ptrs_vector_it);
+
+      // set the pointers to 0
+      //(*m_shape_ptrs_vector_it) = 0;
+
+      m_shape_ptrs_vector_it += 1;
    }
 }
 
@@ -38,14 +47,12 @@ void my_GL_window::initializeGL()
    glewInit();
    glEnable(GL_DEPTH_TEST);
 
+   setMouseTracking(true);
+
    // make a new shape, which will automatically have it's data sent to openGL
    // during the initialization process
    ret_val = shape_generator::make_cube(&new_shape_ptr);
-   if (ret_val < 0)
-   {
-      // problem (??do something??)
-   }
-   else
+   if (0 == ret_val)
    {
       m_shape_ptrs_vector.push_back(new_shape_ptr);
    }
@@ -92,72 +99,72 @@ void my_GL_window::render_frame()
 
    glm::mat4 camera_world_to_view_matrix = m_camera.get_world_to_view_matrix();
 
-   //m_shape_ptrs_vector_it = m_shape_ptrs_vector.begin();
-   //while (m_shape_ptrs_vector_it != m_shape_ptrs_vector.end())
-   //{
-   //   (*m_shape_ptrs_vector_it)->draw_thineself(
-   //      &projection_matrix,
-   //      &camera_world_to_view_matrix);
-   //   m_shape_ptrs_vector_it += 1;
-   //}
+   //m_shape_ptrs_vector[0]->draw_thineself(&projection_matrix, &camera_world_to_view_matrix);
 
-   const float RED_TRIANGLE_Z = +0.5f;
-   const float BLUE_TRIANGLE_Z = -0.5f;
-   my_vertex verts[] =
+   m_shape_ptrs_vector_it = m_shape_ptrs_vector.begin();
+   while (m_shape_ptrs_vector_it != m_shape_ptrs_vector.end())
    {
-      // first triangle
-      glm::vec4(-1.0f, -1.0f, RED_TRIANGLE_Z, 1.0f),    // left bottom corner
-      glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),          // all red
-      glm::vec4(+1.0f, -1.0f, RED_TRIANGLE_Z, 1.0f),    // right bottom corner
-      glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),          // red + green (apparently this makes yellow)
-      glm::vec4(+0.0f, +1.0f, -1.0f, 1.0f),    // center top
-      glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),          // red + blue (apparently this makes pink
-
-      // second triangle
-      glm::vec4(-1.0f, +1.0f, BLUE_TRIANGLE_Z, 1.0f),   // left top corner
-      glm::vec4(0.0f, 0.0f, 1.0f, 0.1f),          // all blue
-      glm::vec4(+1.0f, +1.0f, BLUE_TRIANGLE_Z, 1.0f),   // right top corner
-      glm::vec4(1.0f, 0.0f, 1.0f, 0.5f),          // blue + red
-      glm::vec4(+0.0f, -1.0f, BLUE_TRIANGLE_Z, 1.0f),   // center bottom
-      glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),          // blue + green
-   };
-
-   GLushort indices[] = { 0, 1, 2, 3, 4, 5 };
-
-   GLint position_bytes_per_vertex = sizeof(glm::vec4) / sizeof(float);
-   GLint color_bytes_per_vertex = sizeof(glm::vec4) / sizeof(float);
-
-   GLuint vertex_buffer_ID;;
-   glGenBuffers(1, &vertex_buffer_ID);
-   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_ID);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_DYNAMIC_DRAW);
-   glEnableVertexAttribArray(0);
-   glVertexAttribPointer(
-      0,
-      position_bytes_per_vertex,
-      GL_FLOAT,
-      GL_FALSE,
-      position_bytes_per_vertex + color_bytes_per_vertex,
-      0
-      );
-
-   glEnableVertexAttribArray(1);
-   glVertexAttribPointer(
-      1,
-      color_bytes_per_vertex,
-      GL_FLOAT,
-      GL_FALSE,
-      position_bytes_per_vertex + color_bytes_per_vertex,
-      (char *)(position_bytes_per_vertex)
-      );
-
-   GLuint index_buffer_ID;
-   glGenBuffers(1, &index_buffer_ID);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_ID);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_DYNAMIC_DRAW);
-
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
-
-   glDeleteBuffers(1, &vertex_buffer_ID);
-   glDeleteBuffers(1, &index_buffer_ID);
+      (*m_shape_ptrs_vector_it)->draw_thineself(
+         &projection_matrix,
+         &camera_world_to_view_matrix);
+      m_shape_ptrs_vector_it += 1;
+   }
 }
+
+
+void my_GL_window::mouseMoveEvent(QMouseEvent *e)
+{
+   static glm::vec2 prev_mouse_position(0.0f, 0.0f);
+
+   float new_x = e->x();
+   float new_y = e->y();
+
+   m_camera.mouse_update(glm::vec2(new_x, new_y));
+   prev_mouse_position.x = new_x;
+   prev_mouse_position.y = new_y;
+
+   this->repaint();
+}
+
+void my_GL_window::mousePressEvent(QMouseEvent * e)
+{
+   cout << "mouse clicked" << endl;
+}
+
+
+void my_GL_window::mouseReleaseEvent(QMouseEvent * e)
+{
+   cout << "mouse released" << endl;
+}
+
+void my_GL_window::keyPressEvent(QKeyEvent* e)
+{
+   switch (e->key())
+   {
+   case Qt::Key::Key_W:
+      m_camera.move_forward();
+      break;
+   case Qt::Key::Key_A:
+      m_camera.strafe_left();
+      break;
+   case Qt::Key::Key_S:
+      m_camera.move_back();
+      break;
+   case Qt::Key::Key_D:
+      m_camera.strafe_right();
+      break;
+   case Qt::Key::Key_R:
+      m_camera.move_up();
+      break;
+   case Qt::Key::Key_F:
+      m_camera.move_down();
+      break;
+
+   default:
+      break;
+   }
+
+   this->repaint();
+}
+
+

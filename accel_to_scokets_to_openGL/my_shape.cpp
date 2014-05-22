@@ -21,7 +21,7 @@ my_shape::my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr
    // constructor, so I'll let them call their default constructors, then assign 
    // their first values here
    //glm::translate(m_translation_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
-   m_translation_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f));
+   m_translation_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -9.0f));
    //glm::rotate(m_rotation_matrix, (1.0f / 6.0f) * 3.14159f, glm::vec3(0.0f, 1.0f, 1.0f));
    m_rotation_matrix = glm::rotate(glm::mat4(), (1.0f / 6.0f) * 3.14159f, glm::vec3(0.0f, 1.0f, 1.0f));
 
@@ -121,7 +121,7 @@ int my_shape::draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm:
       glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer_ID);
       glEnableVertexAttribArray(0);
       glVertexAttribPointer(
-         0, 
+         0,
          my_vertex::m_num_position_entries_per_vertex,
          GL_FLOAT,
          GL_FALSE,
@@ -166,8 +166,63 @@ int my_shape::draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm:
       glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4) * 2));
       glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4) * 3));
 
-      // only draw one instance of the cube
-      glDrawElementsInstanced(GL_TRIANGLES, this->m_num_indices, GL_UNSIGNED_SHORT, 0, 1);
+      // we need to use this same matrix across all indices
+      // Note: I don't entirely understand this, but I do know that the draws won't
+      // work (that is, the shape doesn't show up) if we don't specify this.
+      glVertexAttribDivisor(2, 1);
+      glVertexAttribDivisor(3, 1);
+      glVertexAttribDivisor(4, 1);
+      glVertexAttribDivisor(5, 1);
+
+
+      // only draw one instance of the shape
+      glDrawElementsInstanced(GL_TRIANGLES, m_num_indices, GL_UNSIGNED_SHORT, 0, 1);
+
+      // clean up the bindings
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
+
+   return this_ret_val;
+}
+
+int my_shape::draw_thineself()
+{
+   int this_ret_val = 0;
+
+   if (0 == this_ret_val)
+   {
+      // start binding and drawing
+
+      // first the vertex buffer, which includes position and color data
+      glBindBuffer(GL_ARRAY_BUFFER, m_vertex_buffer_ID);
+      glEnableVertexAttribArray(0);
+      glVertexAttribPointer(
+         0,
+         my_vertex::m_num_position_entries_per_vertex,
+         GL_FLOAT,
+         GL_FALSE,
+         my_vertex::m_size_bytes_per_vertex,
+         0
+         );
+
+      glEnableVertexAttribArray(1);
+      glVertexAttribPointer(
+         1,
+         my_vertex::m_num_color_entries_per_vertex,
+         GL_FLOAT,
+         GL_FALSE,
+         my_vertex::m_size_bytes_per_vertex,
+         (char *)(my_vertex::m_size_bytes_per_position_vertex)
+         );
+
+      // second, the indices
+      // Note: State that the data is for "static drawing" because this data will 
+      // not be changing.
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_index_buffer_ID);
+
+      // only draw one instance
+      glDrawElementsInstanced(GL_TRIANGLES, m_num_indices, GL_UNSIGNED_SHORT, 0, 1);
 
       // clean up the bindings
       glBindBuffer(GL_ARRAY_BUFFER, 0);

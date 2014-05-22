@@ -92,3 +92,53 @@ int shape_generator::make_cube(my_shape **shape_ptr_to_assign_to)
    return this_ret_val;
 }
 
+int shape_generator::make_double_triangle(my_shape **shape_ptr_to_assign_to)
+{
+   unsigned int array_size_bytes = 0;
+   unsigned int array_entry_count = 0;
+   int this_ret_val = 0;
+
+   // check for input shenanigans
+   if (0 == shape_ptr_to_assign_to)
+   {
+      this_ret_val = -1;
+   }
+
+   if (0 == this_ret_val)
+   {
+      // declare your vertices
+      const float RED_TRIANGLE_Z = +0.5f;
+      const float BLUE_TRIANGLE_Z = -0.5f;
+      my_vertex verts[] =
+      {
+         // first triangle
+         glm::vec4(-1.0f, -1.0f, RED_TRIANGLE_Z, 1.0f),    // left bottom corner
+         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),          // all red
+         glm::vec4(+1.0f, -1.0f, RED_TRIANGLE_Z, 1.0f),    // right bottom corner
+         glm::vec4(1.0f, 1.0f, 0.0f, 1.0f),          // red + green (apparently this makes yellow)
+         glm::vec4(+0.0f, +1.0f, -1.0f, 1.0f),    // center top
+         glm::vec4(1.0f, 0.0f, 1.0f, 1.0f),          // red + blue (apparently this makes pink
+
+         // second triangle
+         glm::vec4(-1.0f, +1.0f, BLUE_TRIANGLE_Z, 1.0f),   // left top corner
+         glm::vec4(0.0f, 0.0f, 1.0f, 0.1f),          // all blue
+         glm::vec4(+1.0f, +1.0f, BLUE_TRIANGLE_Z, 1.0f),   // right top corner
+         glm::vec4(1.0f, 0.0f, 1.0f, 0.5f),          // blue + red
+         glm::vec4(+0.0f, -1.0f, BLUE_TRIANGLE_Z, 1.0f),   // center bottom
+         glm::vec4(0.0f, 1.0f, 1.0f, 1.0f),          // blue + green
+      };
+
+      GLushort indices[] = { 0, 1, 2, 3, 4, 5 };
+
+      // now make a new shape and return it via the supplied pointer
+      *shape_ptr_to_assign_to = new my_shape(
+         verts,
+         sizeof(verts) / sizeof(my_vertex),
+         indices,
+         sizeof(indices) / sizeof(GLushort)
+         );
+   }
+
+   return this_ret_val;
+}
+

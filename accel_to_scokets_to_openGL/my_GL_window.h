@@ -21,7 +21,6 @@
 #include <vector>
 
 
-
 // use this class to gain access to our gateway to the openGL API,
 // then override things as necessay and add your own functionality 
 // on top of that
@@ -43,6 +42,16 @@ protected:
    // override the widget's "paint GL" method, which causes the GL API to 
    // start the GL pipeline and draw to this window
    void paintGL();
+
+   // override the widget's "mouse move event"
+   // this will ??do what??
+   void mouseMoveEvent(QMouseEvent*);
+   void mousePressEvent(QMouseEvent*);
+   void mouseReleaseEvent(QMouseEvent*);
+
+   // for keyboard inputs
+   void keyPressEvent(QKeyEvent*);
+
 
 private:
    std::vector<my_shape *> m_shape_ptrs_vector;
