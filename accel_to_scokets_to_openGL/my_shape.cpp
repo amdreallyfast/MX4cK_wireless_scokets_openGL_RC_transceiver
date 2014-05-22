@@ -1,7 +1,7 @@
 #include "my_shape.h"
 
 // for definition of vec4
-#include "glm\glm\glm.hpp"
+#include "my_glm_hpp_include.h"
 
 // for typedefs (GLuint, etc.)
 #include <glew-1.10.0\include\GL\glew.h>
@@ -90,7 +90,7 @@ my_shape::~my_shape()
 }
 
 
-int my_shape::draw_thineself(glm::mat4 *projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr)
+int my_shape::draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr)
 {
    int this_ret_val = 0;
 

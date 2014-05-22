@@ -48,7 +48,7 @@ int my_shader_handler::install_shaders()
    GLuint fragment_shader_ID = glCreateShader(GL_FRAGMENT_SHADER);
    
    // starting with the vertex shader, give it the source material, then compile it
-   this_ret_val = read_text_from_file("vertex_shader_.glsl", shader_code_text);
+   this_ret_val = read_text_from_file("vertex_shader.glsl", shader_code_text);
    if (0 == this_ret_val)
    {
       old_GL_double_pointer_adapter[0] = shader_code_text.c_str();

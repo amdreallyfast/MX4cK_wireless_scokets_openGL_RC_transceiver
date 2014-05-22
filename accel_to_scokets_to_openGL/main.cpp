@@ -17,9 +17,8 @@
 
 // I MUST include my socket stuff, which includes some winsock stuff, before I include QT's GL widget, which apparently also includes some winsock stuff.
 // I don't know what they did, but QT's way of including winsock stuff does not work if I include it before I include my winsock stuff.
-#include "scokets.h"
+//#include "scokets.h"
 #include "my_GL_window.h"
-
 
 #include <iostream>
 using std::cout;
@@ -29,7 +28,7 @@ static const unsigned int BUFF_SIZE = 512;
 static const unsigned int MAX_ACCEL_READS = 12;
 
 // for vector typing
-#include "glm\glm\glm.hpp"
+#include "my_glm_hpp_include.h"
 
 int main(int argc, char **argv)
 {
@@ -56,17 +55,13 @@ int main(int argc, char **argv)
 
    int app_return_val = 0;
 
-   glm::vec3 V = glm::vec3(1.0f, 2.0f, 3.0f);
-   V = glm::vec3(3.0f, 2.0f, 1.0f);
+   QApplication app(argc, argv);
 
-   cout << V.x << ", " << V.y << ", " << V.z << endl;
+   my_GL_window window_for_doing_gl_stuff;
+   window_for_doing_gl_stuff.show();
+   window_for_doing_gl_stuff.render_frame();
 
-   //QApplication app(argc, argv);
-
-   //my_GL_window window_for_doing_gl_stuff;
-   //window_for_doing_gl_stuff.show();
-
-   //app_return_val = app.exec();
+   app_return_val = app.exec();
 
    return app_return_val;
 }

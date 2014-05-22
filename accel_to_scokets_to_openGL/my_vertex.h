@@ -1,7 +1,7 @@
 #pragma once
 
 // for definition of vec4
-#include "glm\glm\glm.hpp"
+#include "my_glm_hpp_include.h"
 
 // for typedefs (GLuint, etc.)
 #include <glew-1.10.0\include\GL\glew.h>

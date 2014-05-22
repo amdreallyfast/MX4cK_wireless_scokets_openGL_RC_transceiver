@@ -7,7 +7,7 @@
 #include "my_vertex.h"
 
 // for glm vectors and matrices
-#include <glm\glm\glm.hpp>
+#include "my_glm_hpp_include.h"
 using glm::vec4;
 using glm::mat4;
 

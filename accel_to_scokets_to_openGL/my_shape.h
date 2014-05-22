@@ -13,7 +13,7 @@ public:
    ~my_shape();
 
    // send in various data necessary for this object to compute how it shall draw itself
-   int draw_thineself(glm::mat4 *projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr);
+   int draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr);
 
 private:
    // make some default constructors explicitly private to prevent improper initialization
