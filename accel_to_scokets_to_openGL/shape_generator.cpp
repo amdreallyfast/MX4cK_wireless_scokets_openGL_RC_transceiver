@@ -16,12 +16,13 @@ using glm::mat4;
 using glm::translate;
 using glm::perspective;
 
-int shape_generator::make_cube(my_shape *shape_ptr_to_assign_to)
+int shape_generator::make_cube(my_shape **shape_ptr_to_assign_to)
 {
    unsigned int array_size_bytes = 0;
    unsigned int array_entry_count = 0;
    int this_ret_val = 0;
 
+   // check for input shenanigans
    if (0 == shape_ptr_to_assign_to)
    {
       this_ret_val = -1;
@@ -80,7 +81,7 @@ int shape_generator::make_cube(my_shape *shape_ptr_to_assign_to)
 
 
       // now make a new shape and return it via the supplied pointer
-      shape_ptr_to_assign_to = new my_shape(
+      *shape_ptr_to_assign_to = new my_shape(
          verts,
          sizeof(verts) / sizeof(my_vertex),
          indices,

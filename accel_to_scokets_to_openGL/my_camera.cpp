@@ -25,7 +25,10 @@ my_camera::my_camera() :
 
 glm::mat4 my_camera::get_world_to_view_matrix() const
 {
-   return glm::lookAt(m_position, m_position + m_view_direction, m_world_up_vector);
+   return glm::lookAt(
+      m_position, 
+      m_position + m_view_direction, 
+      m_world_up_vector);
 }
 
 int my_camera::set_world_up_vector(glm::vec3 new_world_up_vector)

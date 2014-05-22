@@ -15,10 +15,17 @@ my_shape::my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr
    m_indices_arr(0),
    m_num_indices(num_indices),
    m_vertex_buffer_ID(0),
-   m_index_buffer_ID(0),
-   m_translation_matrix(glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f))),
-   m_rotation_matrix(glm::rotate(glm::mat4(), (1.0f / 6.0f) * 3.14159f, glm::vec3(0.0f, 1.0f, 1.0f)))
+   m_index_buffer_ID(0)
 {
+   // the matrices need to be initialized, but I can't pass in all the values to a
+   // constructor, so I'll let them call their default constructors, then assign 
+   // their first values here
+   //glm::translate(m_translation_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
+   m_translation_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f));
+   //glm::rotate(m_rotation_matrix, (1.0f / 6.0f) * 3.14159f, glm::vec3(0.0f, 1.0f, 1.0f));
+   m_rotation_matrix = glm::rotate(glm::mat4(), (1.0f / 6.0f) * 3.14159f, glm::vec3(0.0f, 1.0f, 1.0f));
+
+
    unsigned int size_bytes_vertices = num_vertices * sizeof(my_vertex);
    unsigned int size_bytes_indices = num_indices * sizeof(GLushort);
 
@@ -77,6 +84,8 @@ my_shape::my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr
 
 my_shape::~my_shape()
 {
+   //??why is it coming in here again??
+
    // delete the dynamically allocated memory for the vertices and indices
    delete[] m_vertices_arr;
    delete[] m_indices_arr;

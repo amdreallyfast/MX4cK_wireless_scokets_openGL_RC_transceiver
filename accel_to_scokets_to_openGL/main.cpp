@@ -29,6 +29,7 @@ static const unsigned int MAX_ACCEL_READS = 12;
 
 // for vector typing
 #include "my_glm_hpp_include.h"
+#include <glm\glm\gtc\matrix_transform.hpp>
 
 int main(int argc, char **argv)
 {
@@ -57,9 +58,14 @@ int main(int argc, char **argv)
 
    QApplication app(argc, argv);
 
+   //glm::mat4 translate_matrix;
+   //glm::translate(translate_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
+   ////translate_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f));
+   //translate_matrix = glm::translate(translate_matrix, glm::vec3(5.0f, 17.0f, -9.0f));
+
    my_GL_window window_for_doing_gl_stuff;
    window_for_doing_gl_stuff.show();
-   window_for_doing_gl_stuff.render_frame();
+   //window_for_doing_gl_stuff.render_frame();
 
    app_return_val = app.exec();
 
