@@ -1,8 +1,17 @@
-//#pragma comment (lib, "opengl32.lib")
-//#pragma comment (lib, "C:/Qt/4.8.5/lib/QtCored4.lib")
-//#pragma comment (lib, "C:/Qt/4.8.5/lib/QtGuid4.lib")
-//#pragma comment (lib, "C:/Qt/4.8.5/lib/QtOpenGLd4.lib")
-//#pragma comment (lib, "C:/open_gl_stuff/glew-1.10.0/lib/Release/Win32/glew32.lib")
+
+// I like to include the library files here so that they are clearly visible in the
+// code and so that I don't have to set them up in the project build file.
+// Note: I still have to specify "C:/open_gl_stuff", "C:/Qt/4.8.5/include", and
+// "$(ProjectDir)" though in my project build file's "addition include directories" 
+// option.  I don't know why.
+// Note: Although it's dirty, I had to copy the dll files for QtCored4, QtGuid4, 
+// and QtOpenGLd4 into my project's Debug folder in order to make the program work.
+// The program will build without them, but it won't run without them.
+#pragma comment (lib, "opengl32.lib")
+#pragma comment (lib, "C:/Qt/4.8.5/lib/QtCored4.lib")
+#pragma comment (lib, "C:/Qt/4.8.5/lib/QtGuid4.lib")
+#pragma comment (lib, "C:/Qt/4.8.5/lib/QtOpenGLd4.lib")
+#pragma comment (lib, "C:/open_gl_stuff/glew-1.10.0/lib/Release/Win32/glew32.lib")
 
 #include <C:/Qt/4.8.5/include/Qt/qapplication.h>
 
@@ -19,37 +28,39 @@ using std::endl;
 static const unsigned int BUFF_SIZE = 512;
 static const unsigned int MAX_ACCEL_READS = 12;
 
+#include "glm\glm\glm.hpp"
+
 int main(int argc, char **argv)
 {
+   cout << sizeof(glm::vec4) << endl;
+   //int num_accelerometer_reads = 0;
+   //char tx_buffer[BUFF_SIZE];
+   //char rx_buffer[BUFF_SIZE];
+   //my_scoket S;
 
-   int num_accelerometer_reads = 0;
-   char tx_buffer[BUFF_SIZE];
-   char rx_buffer[BUFF_SIZE];
-   my_scoket S;
+   //S.init("10.10.10.126", "5");
+   ////_snprintf(tx_buffer, BUFF_SIZE, "hi there! %d", 10);
+   ////S.send_data(tx_buffer, strlen(tx_buffer));
 
-   S.init("10.10.10.126", "5");
-   //_snprintf(tx_buffer, BUFF_SIZE, "hi there! %d", 10);
-   //S.send_data(tx_buffer, strlen(tx_buffer));
+   //while (1)
+   //{
+   //   S.receive_data(rx_buffer, BUFF_SIZE);
+   //   system("cls");
+   //   cout << "'" << rx_buffer << "'" << endl;
+   //}
 
-   while (1)
-   {
-      S.receive_data(rx_buffer, BUFF_SIZE);
-      system("cls");
-      cout << "'" << rx_buffer << "'" << endl;
-   }
+   //cout << rx_buffer << endl;
 
-   cout << rx_buffer << endl;
+   
 
+   int app_return_val = 0;
 
-   //int app_return_val = 0;
+   QApplication app(argc, argv);
 
-   //QApplication app(argc, argv);
+   my_GL_window window_for_doing_gl_stuff;
+   window_for_doing_gl_stuff.show();
 
-   //my_GL_wingdow window_for_doing_gl_stuff;
-   //window_for_doing_gl_stuff.show();
+   app_return_val = app.exec();
 
-   //app_return_val = app.exec();
-
-   //return app_return_val;
-   return 0;
+   return app_return_val;
 }
