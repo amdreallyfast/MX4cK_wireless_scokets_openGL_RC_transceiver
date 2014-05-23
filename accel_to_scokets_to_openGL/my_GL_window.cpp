@@ -30,9 +30,6 @@ my_GL_window::~my_GL_window()
    {
       delete (*m_shape_ptrs_vector_it);
 
-      // set the pointers to 0
-      //(*m_shape_ptrs_vector_it) = 0;
-
       m_shape_ptrs_vector_it += 1;
    }
 }
@@ -100,6 +97,7 @@ void my_GL_window::render_frame()
    glm::mat4 camera_world_to_view_matrix = m_camera.get_world_to_view_matrix();
 
    //m_shape_ptrs_vector[0]->draw_thineself(&projection_matrix, &camera_world_to_view_matrix);
+   //m_shape_ptrs_vector[0]->draw_thineself();
 
    m_shape_ptrs_vector_it = m_shape_ptrs_vector.begin();
    while (m_shape_ptrs_vector_it != m_shape_ptrs_vector.end())
@@ -112,6 +110,8 @@ void my_GL_window::render_frame()
 }
 
 
+static bool g_mouse_is_pressed;
+
 void my_GL_window::mouseMoveEvent(QMouseEvent *e)
 {
    static glm::vec2 prev_mouse_position(0.0f, 0.0f);
@@ -119,21 +119,36 @@ void my_GL_window::mouseMoveEvent(QMouseEvent *e)
    float new_x = e->x();
    float new_y = e->y();
 
-   m_camera.mouse_update(glm::vec2(new_x, new_y));
    prev_mouse_position.x = new_x;
    prev_mouse_position.y = new_y;
+
+   if (g_mouse_is_pressed)
+   {
+      m_shape_ptrs_vector[0]->point_thineself_mouse_update(glm::vec2(new_x, new_y), this->width(), this->height());
+   }
+   else
+   {
+      //m_camera.mouse_update(glm::vec2(new_x, new_y));
+   }
+   
 
    this->repaint();
 }
 
 void my_GL_window::mousePressEvent(QMouseEvent * e)
 {
+   g_mouse_is_pressed = true;
+
+   m_shape_ptrs_vector[0]->reset_thineself();
+   this->repaint();
    cout << "mouse clicked" << endl;
 }
 
 
 void my_GL_window::mouseReleaseEvent(QMouseEvent * e)
 {
+   g_mouse_is_pressed = false;
+
    cout << "mouse released" << endl;
 }
 
@@ -158,6 +173,9 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
       break;
    case Qt::Key::Key_F:
       m_camera.move_down();
+      break;
+   case Qt::Key::Key_Up:
+      m_shape_ptrs_vector[0]->rotate_thineself((1.0f / 4.0f) * 3.14159f, glm::vec3(0.0f, 0.0f, 1.0f));
       break;
 
    default:

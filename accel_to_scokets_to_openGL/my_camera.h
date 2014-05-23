@@ -20,6 +20,7 @@ public:
    void move_up();
    void move_down();
 
+   
 private:
    glm::vec3 m_world_up_vector;
    glm::vec3 m_position;

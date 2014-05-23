@@ -142,3 +142,50 @@ int shape_generator::make_double_triangle(my_shape **shape_ptr_to_assign_to)
    return this_ret_val;
 }
 
+int shape_generator::make_square(my_shape **shape_ptr_to_assign_to)
+{
+   unsigned int array_size_bytes = 0;
+   unsigned int array_entry_count = 0;
+   int this_ret_val = 0;
+
+   // check for input shenanigans
+   if (0 == shape_ptr_to_assign_to)
+   {
+      this_ret_val = -1;
+   }
+
+   if (0 == this_ret_val)
+   {
+      // declare your vertices
+      my_vertex verts[] =
+      {
+         glm::vec4(+0.5f, +0.5f, +0.0f, 1.0f),     // top right corner
+         glm::vec4(1.0f, 0.0f, 0.0f, 0.0f),        // red
+
+         glm::vec4(+0.5f, -0.5f, +0.0f, 1.0f),     // bottom right corner
+         glm::vec4(0.0f, 1.0f, 0.0f, 0.0f),        // green
+
+         glm::vec4(-0.5f, -0.5f, +0.0f, 1.0f),     // bottom left corner
+         glm::vec4(0.0f, 0.0f, 1.0f, 0.0f),        // blue
+
+         glm::vec4(-0.5f, +0.5f, +0.0f, 1.0f),     // top left corner
+         glm::vec4(0.5f, 0.5f, 0.5f, 0.0f),        // a little bit of everything
+      };
+
+      GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
+
+      
+      //GLushort indices[] = { 0, 1, 2 };
+
+      // now make a new shape and return it via the supplied pointer
+      *shape_ptr_to_assign_to = new my_shape(
+         verts,
+         sizeof(verts) / sizeof(my_vertex),
+         indices,
+         sizeof(indices) / sizeof(GLushort)
+         );
+   }
+
+   return this_ret_val;
+}
+

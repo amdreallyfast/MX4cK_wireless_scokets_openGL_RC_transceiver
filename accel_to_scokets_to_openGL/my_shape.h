@@ -13,9 +13,14 @@ public:
    ~my_shape();
 
    // send in various data necessary for this object to compute how it shall draw itself
+   int draw_thineself();
    int draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr);
 
-   int draw_thineself();
+   int rotate_thineself(float rotate_angle_radians, glm::vec3 rotation_axis);
+
+   int point_thineself_mouse_update(const glm::vec2& new_mouse_position, int window_width, int window_height);
+
+   int reset_thineself();
 
 private:
    // make some default constructors explicitly private to prevent improper initialization
@@ -33,4 +38,7 @@ private:
 
    glm::mat4 m_translation_matrix;
    glm::mat4 m_rotation_matrix;
+
+   glm::vec3 m_world_up_vector;
+   glm::vec2 m_prev_mouse_position;
 };

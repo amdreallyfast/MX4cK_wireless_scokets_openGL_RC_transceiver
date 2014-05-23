@@ -122,4 +122,3 @@ void my_camera::move_down()
 }
 
 
-

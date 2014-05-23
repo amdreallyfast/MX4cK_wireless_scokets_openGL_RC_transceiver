@@ -43,13 +43,10 @@ protected:
    // start the GL pipeline and draw to this window
    void paintGL();
 
-   // override the widget's "mouse move event"
-   // this will ??do what??
+   // override the widget's mouse and keyboard events to move the camera
    void mouseMoveEvent(QMouseEvent*);
    void mousePressEvent(QMouseEvent*);
    void mouseReleaseEvent(QMouseEvent*);
-
-   // for keyboard inputs
    void keyPressEvent(QKeyEvent*);
 
 

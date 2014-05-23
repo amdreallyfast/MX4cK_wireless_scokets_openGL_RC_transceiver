@@ -17,7 +17,7 @@
 
 // I MUST include my socket stuff, which includes some winsock stuff, before I include QT's GL widget, which apparently also includes some winsock stuff.
 // I don't know what they did, but QT's way of including winsock stuff does not work if I include it before I include my winsock stuff.
-//#include "scokets.h"
+#include "scokets.h"
 #include "my_GL_window.h"
 
 #include <iostream>
@@ -33,14 +33,36 @@ static const unsigned int MAX_ACCEL_READS = 12;
 
 int main(int argc, char **argv)
 {
-   //int num_accelerometer_reads = 0;
-   //char tx_buffer[BUFF_SIZE];
-   //char rx_buffer[BUFF_SIZE];
-   //my_scoket S;
+   int app_return_val = 0;
+   int num_accelerometer_reads = 0;
+   char tx_buffer[BUFF_SIZE];
+   char rx_buffer[BUFF_SIZE];
+   my_scoket S;
+   QApplication app(argc, argv);
+
 
    //S.init("10.10.10.126", "5");
-   ////_snprintf(tx_buffer, BUFF_SIZE, "hi there! %d", 10);
-   ////S.send_data(tx_buffer, strlen(tx_buffer));
+   //_snprintf(tx_buffer, BUFF_SIZE, "hi there! %d", 10);
+   //S.send_data(tx_buffer, strlen(tx_buffer));
+
+   //glm::mat4 translate_matrix = glm::mat4();
+   glm::mat4 x = glm::mat4(
+      1.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 1.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 1.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f);
+   glm::mat4 y = glm::inverse(x);
+
+
+   //glm::normalize
+   //translate_matrix = glm::translate(translate_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
+   //translate_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -6.0f));
+   //translate_matrix = glm::translate(translate_matrix, glm::vec3(5.0f, 17.0f, -9.0f));
+
+   my_GL_window window_for_doing_gl_stuff;
+   window_for_doing_gl_stuff.show();
+
+   app_return_val = app.exec();
 
    //while (1)
    //{
@@ -49,23 +71,7 @@ int main(int argc, char **argv)
    //   cout << "'" << rx_buffer << "'" << endl;
    //}
 
-   //cout << rx_buffer << endl;
 
-   
-
-   int app_return_val = 0;
-
-   QApplication app(argc, argv);
-
-   //glm::mat4 translate_matrix = glm::mat4();
-   //glm::translate(translate_matrix, glm::vec3(1.0f, 0.0f, -3.0f));
-   ////translate_matrix = glm::translate(glm::mat4(), glm::vec3(1.0f, 0.0f, -3.0f));
-   //translate_matrix = glm::translate(translate_matrix, glm::vec3(5.0f, 17.0f, -9.0f));
-
-   my_GL_window window_for_doing_gl_stuff;
-   window_for_doing_gl_stuff.show();
-
-   app_return_val = app.exec();
 
    return app_return_val;
 }

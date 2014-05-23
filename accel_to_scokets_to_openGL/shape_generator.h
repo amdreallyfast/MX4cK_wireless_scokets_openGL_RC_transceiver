@@ -13,6 +13,8 @@ public:
 
    static int make_double_triangle(my_shape **shape_ptr_to_assign_to);
 
+   static int make_square(my_shape **shape_ptr_to_assign_to);
+
 private:
    shape_generator();
    shape_generator(const shape_generator&);
