@@ -13,19 +13,15 @@ using std::endl;
 
 my_scoket::my_scoket(QObject *parent) :
 QObject(parent),
-m_socket_ptr(0)
+m_scoket(this)
 {
-   // ??try initializing as an object??
-   m_socket_ptr = new QTcpSocket(this);
-
    // connect to the the thing that you want to connect to
    // Note: In this case, it is my MX4cK microcontroller, which is connected to my
    // residence's wireless network.
-   m_socket_ptr->connectToHost("10.10.10.126", 5);
-   if (!(m_socket_ptr->waitForConnected(5000)))
+   m_scoket.connectToHost("10.10.10.126", 5);
+   if (!(m_scoket.waitForConnected(5000)))
    {
       cout << "could not connect" << endl;
-      delete m_socket_ptr;
    }
    else
    {
@@ -34,41 +30,45 @@ m_socket_ptr(0)
 
    // register the "read it" function to be called when the Qt application emits a
    // signal that says that serial data is ready to read
-   QObject::connect(m_socket_ptr, SIGNAL(readyRead()), this, SLOT(read_it()));
+   QObject::connect(&m_scoket, SIGNAL(readyRead()), this, SLOT(read_it()));
 }
 
 my_scoket::~my_scoket()
 {
-   if (m_socket_ptr != 0)
-   {
-      // pointer points to something, so assume that it is an open socket, close it,
-      // then delete the pointer to call the socket's destructor and free the 
-      // memory
-      m_socket_ptr->close();
-      delete m_socket_ptr;
-   }
+   m_scoket.close();
 }
 
 void my_scoket::read_it()
 {
    QByteArray rx_buff;
-   qint64 bytes_available = m_socket_ptr->bytesAvailable();
+   qint64 bytes_available = m_scoket.bytesAvailable();
 
-   // ??check against 25 exactly??
    if (bytes_available > 0)
    {
-      static float x = 0.0;
-      static float y = 0.0;
-      static float z = 0.0;
+      const float *f_ptr;
+      float accel_x = 0.0f;
+      float accel_y = 0.0f;
+      float accel_z = 0.0f;
 
-      rx_buff = m_socket_ptr->readAll();
+      // read the data and get a pointer to it
+      rx_buff = m_scoket.readAll();
       const char *c_ptr = rx_buff.data();
       //cout << "Reading '" << bytes_available << "' bytes: '" << c_ptr << "'" << endl;
-      x += 1.1;
-      y += 2.2;
-      z += 3.3;
+      f_ptr = reinterpret_cast<const float*>(c_ptr);
+      
+      // now extract the data and send it to the receiver, whoever it is
+      // Note: The accelerometer data on the pmod has Z being the verical axis and
+      // Y being a horizontal axis along with X.  OpenGL, on the other, considers
+      // Y to be the vertical axis.  To account for this, simply, shove the Y data
+      // from the microcontroller into the Z data and vice-versa for the Z data 
+      // from the microcontroller.
+      accel_x = *f_ptr;
+      f_ptr++;
+      accel_z = *f_ptr;
+      f_ptr++;
+      accel_y = *f_ptr;
 
-      emit done_reading_sig(x, y, z);
+      emit done_reading_sig(accel_x, accel_y, accel_z);
 
 
       //QString in_data;

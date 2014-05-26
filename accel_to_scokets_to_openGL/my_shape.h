@@ -17,8 +17,8 @@ public:
    int draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm::mat4 *camera_world_to_view_matrix_ptr);
 
    int rotate_thineself(float rotate_angle_radians, glm::vec3 rotation_axis);
-
    int point_thineself_mouse_update(const glm::vec2& new_mouse_position, int window_width, int window_height);
+   int point_thineself_at_relative_point(const glm::vec3& relative_point);
 
    int reset_thineself();
 

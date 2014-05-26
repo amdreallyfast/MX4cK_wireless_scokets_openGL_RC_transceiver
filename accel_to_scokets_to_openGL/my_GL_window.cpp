@@ -119,17 +119,10 @@ static bool g_mouse_is_pressed;
 
 void my_GL_window::mouseMoveEvent(QMouseEvent *e)
 {
-   static glm::vec2 prev_mouse_position(0.0f, 0.0f);
-
-   float new_x = e->x();
-   float new_y = e->y();
-
-   prev_mouse_position.x = new_x;
-   prev_mouse_position.y = new_y;
-
+   // tell the shape to point itself at the mouse
    if (g_mouse_is_pressed)
    {
-      m_shape_ptrs_vector[0]->point_thineself_mouse_update(glm::vec2(new_x, new_y), this->width(), this->height());
+      m_shape_ptrs_vector[0]->point_thineself_mouse_update(glm::vec2(e->x(), e->y()), this->width(), this->height());
    }
    else
    {
@@ -192,6 +185,11 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
 
 void my_GL_window::receive_serial_data(float X, float Y, float Z)
 {
-   cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
+   //cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
+   
+   // hijack the shape's ability to 
+   //m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(X, Y, Z));
+
+   this->repaint();
 }
 

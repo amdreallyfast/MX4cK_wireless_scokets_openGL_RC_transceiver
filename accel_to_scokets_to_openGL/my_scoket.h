@@ -27,7 +27,7 @@ private:
 
    Q_SLOT void read_it();
 
-   QTcpSocket *m_socket_ptr;
+   QTcpSocket m_scoket;
 
 };
 

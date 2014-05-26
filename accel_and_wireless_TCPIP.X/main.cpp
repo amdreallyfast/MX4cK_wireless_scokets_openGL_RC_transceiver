@@ -110,11 +110,19 @@ void read_accel_and_send(void)
       if (1 == TCPIP_is_there_a_connection_on_port(SERVER_PORT))
       {
          unsigned char tx_buffer[MESSAGE_BUFFER_SIZE_BYTES];
-         
-         // send the accelerometer data to the PC
          memset(tx_buffer, 0, MESSAGE_BUFFER_SIZE_BYTES);
-         snprintf((char*)tx_buffer, MESSAGE_BUFFER_SIZE_BYTES, "X:%.2f, Y:%.2f, Z:%.2f", accel_data.X, accel_data.Y, accel_data.Z);
-         TCPIP_basic_send(SERVER_PORT, tx_buffer, strlen((char*)tx_buffer));
+
+         // fill in the buffer with tightly packed accelerometer data
+         float *f_ptr = (float *)tx_buffer;
+         *f_ptr = accel_data.X;
+         f_ptr++;
+         *f_ptr = accel_data.Y;
+         f_ptr++;
+         *f_ptr = accel_data.Z;
+
+         // send the accelerometer data to the PC
+         //snprintf((char*)tx_buffer, MESSAGE_BUFFER_SIZE_BYTES, "X:%.2f, Y:%.2f, Z:%.2f", accel_data.X, accel_data.Y, accel_data.Z);
+         TCPIP_basic_send(SERVER_PORT, tx_buffer, sizeof(ACCEL_DATA));
       }
    }
 }

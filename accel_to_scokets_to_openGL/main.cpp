@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
    my_scoket S;
    my_GL_window window_for_doing_gl_stuff;
-   //window_for_doing_gl_stuff.show();
+   window_for_doing_gl_stuff.show();
 
    QObject::connect(
       &S,
