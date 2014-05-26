@@ -22,6 +22,11 @@ using std::vector;
 #include <QtGui/qkeyevent>
 
 
+// include the moc-generated source file for the the GL window's meta data, which 
+// will allow the compiler to link up the things labeled as SIGNAL and SLOT
+#include "my_moc_source_files\moc_my_GL_window.cpp"
+
+
 my_GL_window::~my_GL_window()
 {
    // destroy all shapes that we kept around
@@ -185,4 +190,8 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
    this->repaint();
 }
 
+void my_GL_window::receive_serial_data(float X, float Y, float Z)
+{
+   cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
+}
 
