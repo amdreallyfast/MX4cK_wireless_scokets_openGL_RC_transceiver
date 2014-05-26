@@ -6,6 +6,11 @@
 using std::cout;
 using std::endl;
 
+#include <string>
+using std::string;
+
+#define HOST_ADDR "10.10.10.126"
+#define PORT_NUM 5
 
 // include the .cpp file made by the meta-object compiler for the header file 
 // associated with this source file
@@ -18,14 +23,14 @@ m_scoket(this)
    // connect to the the thing that you want to connect to
    // Note: In this case, it is my MX4cK microcontroller, which is connected to my
    // residence's wireless network.
-   m_scoket.connectToHost("10.10.10.126", 5);
+   m_scoket.connectToHost(HOST_ADDR, PORT_NUM);
    if (!(m_scoket.waitForConnected(5000)))
    {
-      cout << "could not connect" << endl;
+      cout << "could not connect to host '" << HOST_ADDR << "' on port '" << PORT_NUM << "'" << endl;
    }
    else
    {
-      cout << "connected!" << endl;
+      cout << "connected to host '" << HOST_ADDR << "' on port '" << PORT_NUM << "'" << endl;
    }
 
    // register the "read it" function to be called when the Qt application emits a

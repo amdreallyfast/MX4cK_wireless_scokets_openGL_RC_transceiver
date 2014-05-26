@@ -185,10 +185,10 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
 
 void my_GL_window::receive_serial_data(float X, float Y, float Z)
 {
-   //cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
+   cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
    
    // hijack the shape's ability to 
-   //m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(X, Y, Z));
+   m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(X, Y, Z));
 
    this->repaint();
 }
