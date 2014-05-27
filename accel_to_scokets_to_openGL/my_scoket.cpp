@@ -74,12 +74,6 @@ void my_scoket::read_it()
       accel_y = *f_ptr;
 
       emit done_reading_sig(accel_x, accel_y, accel_z);
-
-
-      //QString in_data;
-      //in >> in_data;
-
-      //qDebug() << in_data;
    }
    else
    {

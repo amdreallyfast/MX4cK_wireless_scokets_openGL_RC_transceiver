@@ -49,7 +49,8 @@ void my_GL_window::initializeGL()
    glewInit();
    glEnable(GL_DEPTH_TEST);
 
-   setMouseTracking(true);
+   // only use if you are NOT tracking accelerometer data
+   //setMouseTracking(true);
 
    // make a new shape, which will automatically have it's data sent to openGL
    // during the initialization process
@@ -133,7 +134,7 @@ void my_GL_window::mouseMoveEvent(QMouseEvent *e)
    }
    else
    {
-      //m_camera.mouse_update(glm::vec2(new_x, new_y));
+      m_camera.mouse_update(glm::vec2(e->x(), e->y()));
    }
    
 

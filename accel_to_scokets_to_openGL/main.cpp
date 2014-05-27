@@ -42,6 +42,16 @@ int main(int argc, char **argv)
    my_GL_window window_for_doing_gl_stuff;
    window_for_doing_gl_stuff.show();
 
+   // hook up the socket's "done reading" signal to my GL window's (a class 
+   // derived from QGLWidget) "receive serial data" function
+   // Note: These "signals" and "slots" are Qt's way of performing asyncronous 
+   // communication, and they are quite useful in communicating across threads.  
+   // The QTcpSocket, which my_scoket implements, runs in it's own thread, and 
+   // serial communication is blocking.  QApplication::exec() is also blocking, so
+   // the only way to pass data from my scoket handler into my derived QGLWidget 
+   // object is to connect them with these "signals" and "slots".
+   // Also Note:  Effectively, these are function addresses being registered behind
+   // the scenes, but the nice part is that I don't have to bother implementing it.
    QObject::connect(
       &S,
       SIGNAL(done_reading_sig(float, float, float)),
@@ -49,9 +59,6 @@ int main(int argc, char **argv)
       SLOT(receive_serial_data(float, float, float)));
 
    app_return_val = app.exec();
-
-
-
 
    return app_return_val;
 }
