@@ -8,8 +8,12 @@
 
 // for matrix calculations
 #include <glm\glm\gtc\matrix_transform.hpp>
-
 #include <glm\glm\trigonometric.hpp>
+
+#include <iostream>
+using std::cout;
+using std::endl;
+
 
 my_shape::my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr, GLuint num_indices) :
    m_vertices_arr(0),
@@ -81,10 +85,10 @@ my_shape::my_shape(my_vertex *vert_arr, GLuint num_vertices, GLushort *index_arr
       0, 
       GL_DYNAMIC_DRAW);
 
+
    // do a little cleanup by unbinding the buffers
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
 }
 
 my_shape::~my_shape()
@@ -189,6 +193,8 @@ int my_shape::draw_thineself(const glm::mat4 * const projection_matrix_ptr, glm:
 
       // only draw one instance of the shape
       glDrawElementsInstanced(GL_TRIANGLES, m_num_indices, GL_UNSIGNED_SHORT, 0, 1);
+      //glDrawElementsInstanced(GL_LINES, m_num_indices, GL_UNSIGNED_SHORT, 0, 1);
+
 
       // clean up the bindings
       glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -254,12 +260,6 @@ int my_shape::rotate_thineself(float rotate_angle_radians, glm::vec3 rotation_ax
    // pass in the existing matrix so that it will building off the previous one
    m_rotation_matrix = glm::rotate(m_rotation_matrix, rotate_angle_radians, rotation_axis);
 
-   //float rotation_angle = 0.0f;
-   //rotation_angle = glm::atan(1.0f, 1.0f);      // should be 45 degrees, or 1/4*pi, or ~0.785
-   //rotation_angle = glm::atan(5.0f, 8.66f);     // should be 30 degrees, or 1/6*pi, or ~0.524
-   //rotation_angle = glm::atan(8.66f, 5.0f);     // should be 60 degrees, or 1/3*pi, or ~1.047
-
-
    return this_ret_val;
 }
 
@@ -295,11 +295,71 @@ int my_shape::point_thineself_at_relative_point(const glm::vec3& relative_point)
 {
    // the relative point is as good as a point vector from the shape's current 
    // position, so just use the argument vector for angle calculations
-   float rotation_angle_around_x = glm::atan(relative_point.y, relative_point.z);
-   float rotation_angle_around_y = (-1.0f) * glm::atan(relative_point.z, relative_point.x);
 
-   m_rotation_matrix = glm::rotate(glm::mat4(), rotation_angle_around_x, glm::vec3(1.0f, 0.0f, 0.0f));
-   m_rotation_matrix = glm::rotate(m_rotation_matrix, rotation_angle_around_y, glm::vec3(0.0f, 1.0f, 0.0f));
+   glm::vec3 world_up_vec = glm::vec3(0.0f, 1.0f, 0.0f);
+   glm::vec3 rotation_vec = glm::cross(world_up_vec, relative_point);
+
+   // get the angle whose sine is the relative point height divided by the 
+   // hypotenuse
+   // Note: If the accelerometer is pointing straight up, then the arcsine of the 
+   // height off the horizontal plane divided by the hypotenuse will be 90 degrees, 
+   // but I want the rotation to be 0 degrees when it is pointing straight up, so 
+   // subtract the angle from 90 degress.
+   // Also Note: We are using radians though, so use (1/2)pi.
+   float my_relative_point_length = glm::length(relative_point);
+   float rotation_angle = ((1.0f / 2.0f) * 3.14159f) - glm::asin(relative_point.y / my_relative_point_length);
+
+   // rotate the matrix
+   m_rotation_matrix = glm::rotate(glm::mat4(), rotation_angle, rotation_vec);
+
+   system("cls");
+   printf("sin(%5.3f) = %5.3f / %5.3f\n", rotation_angle * (360.0f / (2.0f * 3.14159f)), relative_point.y, my_relative_point_length);
+   printf("relative point vector: (%5.3f, %5.3f, %5.3f)\n", relative_point.x, relative_point.y, relative_point.z);
+   printf("length of relative point vector = %5.3f\n", my_relative_point_length);
+   printf("rotation vector: (%5.3f, %5.3f, %5.3f)\n", rotation_vec.x, rotation_vec.y, rotation_vec.z);
+   printf("rotation angle around axis = %5.3f\n", rotation_angle);
+
+
+
+
+   //float rotation_angle_around_x = glm::atan(relative_point.y, relative_point.z) + ((1.0f / 2.0f) * 3.14159f);
+   //float rotation_angle_around_y = (-1.0f) * glm::atan(relative_point.z, relative_point.x);
+   //float rotation_angle_around_z = glm::atan(relative_point.y, relative_point.x) + ((1.0f / 2.0f) * 3.14159f);
+
+   // this is an accelerometer, so we only want to rotate around the horizontal axes
+   //m_rotation_matrix = glm::rotate(glm::mat4(), rotation_angle_around_x, glm::vec3(1.0f, 0.0f, 0.0f));
+   //m_rotation_matrix = glm::rotate(m_rotation_matrix, rotation_angle_around_y, glm::vec3(0.0f, 1.0f, 0.0f));
+   //m_rotation_matrix = glm::rotate(m_rotation_matrix, rotation_angle_around_z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+   //system("cls");
+   //printf("vector: (%5.3f, %5.3f, %5.3f)\n", relative_point.x, relative_point.y, relative_point.z);
+   //printf("\n");
+   //printf("rotation angle around axis: X=%5.2f, Y=%5.2f, Z=%5.2f\n",
+   //   rotation_angle_around_x * (360.0f / 3.14159),
+   //   rotation_angle_around_y * (360.0f / 3.14159),
+   //   rotation_angle_around_z * (360.0f / 3.14159));
+   //printf("\n");
+   //printf("rotation matrix:\n");
+   //printf("%5.3f %5.3f %5.3f %5.3f\n",
+   //   m_rotation_matrix[0][0],
+   //   m_rotation_matrix[0][1],
+   //   m_rotation_matrix[0][2],
+   //   m_rotation_matrix[0][3]);
+   //printf("%5.3f %5.3f %5.3f %5.3f\n",
+   //   m_rotation_matrix[1][0],
+   //   m_rotation_matrix[1][1],
+   //   m_rotation_matrix[1][2],
+   //   m_rotation_matrix[1][3]);
+   //printf("%5.3f %5.3f %5.3f %5.3f\n",
+   //   m_rotation_matrix[2][0],
+   //   m_rotation_matrix[2][1],
+   //   m_rotation_matrix[2][2],
+   //   m_rotation_matrix[2][3]);
+   //printf("%5.3f %5.3f %5.3f %5.3f\n",
+   //   m_rotation_matrix[3][0],
+   //   m_rotation_matrix[3][1],
+   //   m_rotation_matrix[3][2],
+   //   m_rotation_matrix[3][3]);
 
    return 0;
 }

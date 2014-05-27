@@ -53,7 +53,7 @@ void my_GL_window::initializeGL()
 
    // make a new shape, which will automatically have it's data sent to openGL
    // during the initialization process
-   ret_val = shape_generator::make_cube(&new_shape_ptr);
+   ret_val = shape_generator::make_pyramid(&new_shape_ptr);
    if (0 == ret_val)
    {
       m_shape_ptrs_vector.push_back(new_shape_ptr);
@@ -70,6 +70,13 @@ void my_GL_window::initializeGL()
 
 void my_GL_window::paintGL()
 {
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //glViewport(0, 0, this->width(), this->height());
+
+   //GLuint point_buffer_ID = 
+
+
+
    render_frame();
 }
 
@@ -173,7 +180,16 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
       m_camera.move_down();
       break;
    case Qt::Key::Key_Up:
-      m_shape_ptrs_vector[0]->rotate_thineself((1.0f / 4.0f) * 3.14159f, glm::vec3(0.0f, 0.0f, 1.0f));
+      m_shape_ptrs_vector[0]->rotate_thineself(+0.1f, glm::vec3(1.0f, 1.0f, 1.0f));
+      break;
+   case Qt::Key::Key_Down:
+      m_shape_ptrs_vector[0]->rotate_thineself(-0.1f, glm::vec3(1.0f, -1.0f, 1.0f));
+      break;
+   case Qt::Key::Key_Left:
+      m_shape_ptrs_vector[0]->rotate_thineself(+0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+      break;
+   case Qt::Key::Key_Right:
+      m_shape_ptrs_vector[0]->rotate_thineself(-0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
       break;
 
    default:
@@ -185,7 +201,7 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
 
 void my_GL_window::receive_serial_data(float X, float Y, float Z)
 {
-   cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
+   //cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
    
    // hijack the shape's ability to 
    m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(X, Y, Z));

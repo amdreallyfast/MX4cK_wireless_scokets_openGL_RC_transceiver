@@ -101,6 +101,13 @@ void read_accel_and_send(void)
       my_i2c_handler& i2c_ref = my_i2c_handler::get_instance();
       i2c_ref.accel_read(I2C2, &accel_data);
 
+      // the Z axis (the vertical axis) is not calibrated correctly, being
+      // shifted 0.14 in the -Z direction, and it seems to be consistently off,
+      // so magically account for it
+      accel_data.Z += 0.14;
+
+
+
       snprintf(cls_message, CLS_LINE_SIZE, "x:%.2lf, y:%.2lf", accel_data.X, accel_data.Y);
       i2c_ref.CLS_write_to_line(I2C2, cls_message, 1);
       snprintf(cls_message, CLS_LINE_SIZE, "z:%.2lf", accel_data.Z);
