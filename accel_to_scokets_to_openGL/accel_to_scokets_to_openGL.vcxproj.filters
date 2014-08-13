@@ -83,6 +83,9 @@
     <ClInclude Include="my_scoket.h">
       <Filter>utils\socket_stuff</Filter>
     </ClInclude>
+    <ClInclude Include="my_vector_point_node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.glsl">

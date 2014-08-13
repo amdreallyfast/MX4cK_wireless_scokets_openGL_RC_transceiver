@@ -14,6 +14,7 @@
 
 #include "my_shape.h"
 #include "my_camera.h"
+#include "my_vector_point_node.h"
 
 #include <vector>
 
@@ -57,6 +58,10 @@ private:
    std::vector<my_shape *> m_shape_ptrs_vector;
    std::vector<my_shape *>::iterator m_shape_ptrs_vector_it;
    my_camera m_camera;
+
+   static const int m_INTERPOLATION_STEPS = 10;
+   vector_point_node m_interpolated_point_vectors[m_INTERPOLATION_STEPS];
+   vector_point_node *m_current_point_vector;
 
 private slots:
    void timer_update(void);

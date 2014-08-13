@@ -277,7 +277,7 @@ int my_shape::point_thineself_mouse_update(const glm::vec2& new_mouse_position, 
 
    float rotation_angle_around_x = glm::atan(point_vector.y, point_vector.z);
 
-   // I don't understand quote how this arctan(...) function is calculating the 
+   // I don't understand quite how this arctan(...) function is calculating the 
    // angle, but it is inverted and 90 degrees less than what I want.  Magically
    // account for it.
    float rotation_angle_around_y = (-1.0f) * glm::atan(point_vector.z, point_vector.x) + ((1.0f / 2.0f) * 3.14159f);

@@ -102,6 +102,7 @@ C:\Qt\4.8.5\bin\moc.exe $(ProjectDir)\my_GL_window.h -o $(ProjectDir)\my_moc_sou
     <ClInclude Include="my_vertex.h" />
     <ClInclude Include="my_scoket.h" />
     <ClInclude Include="shape_generator.h" />
+    <ClInclude Include="my_vector_point_node.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment_shader.glsl" />
