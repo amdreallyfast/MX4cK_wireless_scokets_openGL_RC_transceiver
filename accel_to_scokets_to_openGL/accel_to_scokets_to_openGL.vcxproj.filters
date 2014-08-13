@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{1d72b96e-5b00-46e6-b48d-7079df6d4804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\openGL_shape_stuff">
+      <UniqueIdentifier>{27b27b51-916f-4283-858f-611cc081b218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\socket_stuff">
+      <UniqueIdentifier>{859d5566-6c82-424b-9b89-bc129791e38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\openGL_shader_stuff">
+      <UniqueIdentifier>{420fa909-07be-400c-8d34-d5531ba6987f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\openGL_camera">
+      <UniqueIdentifier>{b2f8bc0b-a377-415a-8047-ee72ec1b6c05}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\render_window">
+      <UniqueIdentifier>{667d4044-1bac-486f-ba26-da2546d17806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils\misc">
+      <UniqueIdentifier>{a8bfa65d-f9ee-442f-92cd-e714e9cbd704}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shape_generator.cpp">
+      <Filter>utils\openGL_shape_stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="my_shape.cpp">
+      <Filter>utils\openGL_shape_stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="my_shader_handler.cpp">
+      <Filter>utils\openGL_shader_stuff</Filter>
+    </ClCompile>
+    <ClCompile Include="my_camera.cpp">
+      <Filter>utils\openGL_camera</Filter>
+    </ClCompile>
+    <ClCompile Include="my_GL_window.cpp">
+      <Filter>utils\render_window</Filter>
+    </ClCompile>
+    <ClCompile Include="my_scoket.cpp">
+      <Filter>utils\socket_stuff</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="my_shape.h">
+      <Filter>utils\openGL_shape_stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="my_vertex.h">
+      <Filter>utils\openGL_shape_stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="shape_generator.h">
+      <Filter>utils\openGL_shape_stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="my_shader_handler.h">
+      <Filter>utils\openGL_shader_stuff</Filter>
+    </ClInclude>
+    <ClInclude Include="my_camera.h">
+      <Filter>utils\openGL_camera</Filter>
+    </ClInclude>
+    <ClInclude Include="my_GL_window.h">
+      <Filter>utils\render_window</Filter>
+    </ClInclude>
+    <ClInclude Include="my_glm_hpp_include.h">
+      <Filter>utils\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="my_scoket.h">
+      <Filter>utils\socket_stuff</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment_shader.glsl">
+      <Filter>utils\openGL_shader_stuff</Filter>
+    </None>
+    <None Include="vertex_shader.glsl">
+      <Filter>utils\openGL_shader_stuff</Filter>
+    </None>
+  </ItemGroup>
+</Project>
