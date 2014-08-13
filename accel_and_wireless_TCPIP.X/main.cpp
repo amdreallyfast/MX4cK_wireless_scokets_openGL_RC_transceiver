@@ -252,6 +252,8 @@ int main(void)
    snprintf(cls_message, CLS_LINE_SIZE, "%d.%d.%d.%d", ip_1, ip_2, ip_3, ip_4);
    i2c_ref.CLS_write_to_line(I2C2, cls_message, 2);
 
+   // pause to show the new IP address
+   delayMS(2000);
 
    // NOW begin your custom code
    while (1)

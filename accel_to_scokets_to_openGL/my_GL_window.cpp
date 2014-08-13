@@ -24,7 +24,7 @@ using std::vector;
 
 // include the moc-generated source file for the the GL window's meta data, which 
 // will allow the compiler to link up the things labeled as SIGNAL and SLOT
-#include "my_moc_source_files\moc_my_GL_window.cpp"
+#include "my_GL_window_moc.cpp"
 
 
 my_GL_window::~my_GL_window()
@@ -67,19 +67,25 @@ void my_GL_window::initializeGL()
       // something didn't compile or link correctly (??do something??)
       cout << "something bad happened during shader initialization" << endl;
    }
+
+   // make the timer go as fast as it can
+   bool b = this->connect(&m_qt_timer, SIGNAL(timeout()), this, SLOT(timer_update()));
+   cout << b << endl;
+   m_qt_timer.start(0);
 }
+
+
+// do nothing
+void my_GL_window::paintEvent()
+{
+}
+
 
 void my_GL_window::paintGL()
 {
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   //glViewport(0, 0, this->width(), this->height());
-
-   //GLuint point_buffer_ID = 
-
-
-
    render_frame();
 }
+
 
 void my_GL_window::render_frame()
 {
@@ -138,7 +144,7 @@ void my_GL_window::mouseMoveEvent(QMouseEvent *e)
    }
    
 
-   this->repaint();
+   //this->repaint();
 }
 
 void my_GL_window::mousePressEvent(QMouseEvent * e)
@@ -146,7 +152,7 @@ void my_GL_window::mousePressEvent(QMouseEvent * e)
    g_mouse_is_pressed = true;
 
    m_shape_ptrs_vector[0]->reset_thineself();
-   this->repaint();
+   //this->repaint();
    cout << "mouse clicked" << endl;
 }
 
@@ -197,16 +203,28 @@ void my_GL_window::keyPressEvent(QKeyEvent* e)
       break;
    }
 
-   this->repaint();
+   //this->repaint();
 }
 
+
+// this is a QT SLOT function
+void my_GL_window::timer_update()
+{
+   //this->render_frame();
+   glDraw();
+}
+
+
+// this is a QT SLOT function
 void my_GL_window::receive_serial_data(float X, float Y, float Z)
 {
    //cout << "X = '" << X << "', Y = '" << Y << "', Z = '" << Z << "'" << endl;
-   
-   // hijack the shape's ability to 
-   m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(X, Y, Z));
 
-   this->repaint();
+   // hijack the shape's ability to point itself at a 2D viewport point
+   // Note: The "negative X" is because of accelerometer-openGL axis directions.
+   m_shape_ptrs_vector[0]->point_thineself_at_relative_point(glm::vec3(-X, Y, Z));
+
+   //this->repaint();
 }
+
 

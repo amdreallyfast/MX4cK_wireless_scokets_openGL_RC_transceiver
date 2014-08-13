@@ -9,12 +9,12 @@ using std::endl;
 #include <string>
 using std::string;
 
-#define HOST_ADDR "10.10.10.126"
+#define HOST_ADDR "10.10.10.147"
 #define PORT_NUM 5
 
 // include the .cpp file made by the meta-object compiler for the header file 
 // associated with this source file
-#include "my_moc_source_files/moc_my_scoket.cpp"
+#include "my_scoket_moc.cpp"
 
 my_scoket::my_scoket(QObject *parent) :
 QObject(parent),
