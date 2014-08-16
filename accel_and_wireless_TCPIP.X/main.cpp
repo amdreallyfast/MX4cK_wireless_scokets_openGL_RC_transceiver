@@ -57,9 +57,31 @@ BOOL g_accel_init_good;
 void TCPIP_send_receive(void);
 void read_accel_and_send(void);
 
+
+bool g_still_alive;
+
 extern "C" void __ISR(_TIMER_1_VECTOR, IPL7AUTO) Timer1Handler(void)
 {
+   static bool last_alive = false;
+   static unsigned int ms_same = 0;
+
    gMillisecondsInOperation++;
+
+   if (g_still_alive != last_alive)
+   {
+      ms_same = 0;
+      last_alive = g_still_alive;
+   }
+   else
+   {
+      // same
+      ms_same += 1;
+      if (ms_same > 20000)
+      {
+         ms_same = 0;
+      }
+   }
+
 
    if (0 == gMillisecondsInOperation % 50)
    {
@@ -148,7 +170,8 @@ int main(void)
    UINT8 ip_4 = 0;
    char cls_message[CLS_LINE_SIZE + 1];
    unsigned char rx_buffer[MESSAGE_BUFFER_SIZE_BYTES];
-   
+
+   g_still_alive = true;
 
    gMillisecondsInOperation = 0;
    g_TCPIP_service_can_start = FALSE;
@@ -193,6 +216,7 @@ int main(void)
 
    //TCPIP_and_wifi_stack_init("my_wifi_network_ssid", "my_wifi_network_pass_phrase");
    TCPIP_and_wifi_stack_init("Christ-2.4", "Jesus is GOD!");
+   //TCPIP_and_wifi_stack_init("wegetsignal", "makeyourtime");
    snprintf(cls_message, CLS_LINE_SIZE, "TCPIP init good");
    i2c_ref.CLS_write_to_line(I2C2, cls_message, 1);
    g_TCPIP_service_can_start = TRUE;
@@ -200,13 +224,17 @@ int main(void)
    // wait for the wifi to connect
    while(1)
    {
+      g_still_alive = false;
+
       // I like to blink an LED to show how long this loop is executing
       // Note: This loop will get stuck afteronly a few loops because that is
       // when the TCPIP stack will start connecting to the network, and that
       // takes ~30 seconds, during which you should expect to not see this
       // light blinking.
-      if ((gMillisecondsInOperation % 50) == 0)
+      static unsigned int ms_counter = 0;
+      if ((gMillisecondsInOperation - ms_counter) >= 50)
       {
+         ms_counter = gMillisecondsInOperation;
          PORTToggleBits(IOPORT_B, BIT_10);
       }
 
@@ -218,6 +246,7 @@ int main(void)
       // break out and continue program once IP address stops being link local
       TCPIP_get_IP_address(&ip_1, &ip_2, &ip_3, &ip_4);
       if (ip_1 != 169 && ip_2 != 254)
+      //if (ip_1 == 169 && ip_2 == 254 && ip_3 == 104 && ip_4 == 152)
       {
          // IP address is not link local, so assume that we are connected to
          // the router specified by the SSID in my TCPIP framework code
@@ -225,6 +254,8 @@ int main(void)
       }
       snprintf(cls_message, CLS_LINE_SIZE, "%d.%d.%d.%d", ip_1, ip_2, ip_3, ip_4);
       i2c_ref.CLS_write_to_line(I2C2, cls_message, 2);
+
+      g_still_alive = true;
    }
 
    // open a port on the connected network, and display the result (success or
@@ -254,6 +285,7 @@ int main(void)
 
    // pause to show the new IP address
    delayMS(2000);
+   //while(1);
 
    // NOW begin your custom code
    while (1)
